@@ -33,12 +33,17 @@
   - 玩的次數恢復初始值 score = 20
   - 亂數重跑一次
   - 畫面上的顯示回到初始值 
+
+  STEP8 : 紀錄最速傳說
+  - 用變數記錄最快的值
+  - 紀錄被打破 👉 獲勝的時候比較一下score，誰慢誰下去。
 */
 
 'use strict';
 
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
+let highscore = 0;
 
 document.querySelector('.check').addEventListener('click', () => {
   const guess = Number(document.querySelector('.guess').value);
@@ -54,6 +59,11 @@ document.querySelector('.check').addEventListener('click', () => {
     document.querySelector('.number').textContent = secretNumber;
     document.querySelector('body').style.backgroundColor = '#60b347';
     document.querySelector('.number').style.width = '30rem';
+
+    if (score > highscore) {
+      highscore = score;
+      document.querySelector('.highscore').textContent = highscore;
+    }
 
     // 當猜得太高時
   } else if (guess > secretNumber) {

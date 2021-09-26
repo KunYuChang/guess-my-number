@@ -37,6 +37,10 @@
   STEP8 : 紀錄最速傳說
   - 用變數記錄最快的值
   - 紀錄被打破 👉 獲勝的時候比較一下score，誰慢誰下去。
+
+  STEP9 : 優化程式碼
+  - 使用三元運算子來決定輸出的內容 (免去了原本許多重覆的CODE)
+  - 使用function dry
 */
 
 'use strict';
@@ -45,17 +49,23 @@ let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 let highscore = 0;
 
+// 因為使用頻率高，所以用function進行dry code
+const displayMessage = function (message) {
+  document.querySelector('.message').textContent = message;
+};
+
 document.querySelector('.check').addEventListener('click', () => {
   const guess = Number(document.querySelector('.guess').value);
   console.log(guess, typeof guess);
 
   // 當沒有輸入值時
   if (!guess) {
-    document.querySelector('.message').textContent = '⛔ No number!';
+    displayMessage('⛔ No number!');
 
     // 當玩家獲勝時
   } else if (guess === secretNumber) {
-    document.querySelector('.message').textContent = '🎉 Correct Number!';
+    displayMessage('🎉 Correct Number!');
+
     document.querySelector('.number').textContent = secretNumber;
     document.querySelector('body').style.backgroundColor = '#60b347';
     document.querySelector('.number').style.width = '30rem';
@@ -65,25 +75,14 @@ document.querySelector('.check').addEventListener('click', () => {
       document.querySelector('.highscore').textContent = highscore;
     }
 
-    // 當猜得太高時
-  } else if (guess > secretNumber) {
+    // 當玩家猜錯時
+  } else if (guess !== secretNumber) {
     if (score > 1) {
-      document.querySelector('.message').textContent = '📈 Too high!';
+      displayMessage(guess > secretNumber ? '📈 Too high!' : '📉 Too low!');
       score--;
       document.querySelector('.score').textContent = score;
     } else {
-      document.querySelector('.message').textContent = '💥 You lost the game!';
-      document.querySelector('.score').textContent = 0;
-    }
-
-    // 當猜得太低時
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent = '📉 Too low!';
-      score--;
-      document.querySelector('.score').textContent = score;
-    } else {
-      document.querySelector('.message').textContent = '💥 You lost the game!';
+      displayMessage('💥 You lost the game!');
       document.querySelector('.score').textContent = 0;
     }
   }
@@ -93,7 +92,7 @@ document.querySelector('.again').addEventListener('click', () => {
   score = 20;
   secretNumber = Math.trunc(Math.random() * 20) + 1;
   document.querySelector('.score').textContent = score;
-  document.querySelector('.message').textContent = 'Start guessing...';
+  displayMessage('Start guessing...');
   document.querySelector('.guess').value = '';
   document.querySelector('.number').textContent = '?';
   document.querySelector('.number').style.width = '15rem';

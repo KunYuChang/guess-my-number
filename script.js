@@ -1,5 +1,3 @@
-'use strict';
-
 /* 
   STEP1 : 取得使用者的輸入值與偵聽按鈕點擊事件。
   - 需要操作DOM 👉 document.querySelector()
@@ -25,21 +23,39 @@
   - 畫面也要跟著變 👉 document.querySelector('.message').textContent = score;
   - 要知道遊戲結束的條件(score === 0) 👉 IF
   
-  STEP6 : 
+  STEP6 : 獲勝的外觀設定 (js 操控 css style)
+  - 背景色改成綠色 👉 style.backgroundColor
+  - 神奇的框框加大 👉 style.width
+  - css的鏈式寫法要改成js的駝峰寫法 ex. background-color -> backgroundColor
+  - 指定的值要用''包起來 ex. = '30rem'
+
+  STEP7 : 重玩
+  - 玩的次數恢復初始值 score = 20
+  - 亂數重跑一次
+  - 畫面上的顯示回到初始值 
 */
 
-const secretNumber = Math.trunc(Math.random() * 20) + 1;
+'use strict';
+
+let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
-document.querySelector('.number').textContent = secretNumber;
 
 document.querySelector('.check').addEventListener('click', () => {
   const guess = Number(document.querySelector('.guess').value);
   console.log(guess, typeof guess);
 
+  // 當沒有輸入值時
   if (!guess) {
     document.querySelector('.message').textContent = '⛔ No number!';
+
+    // 當玩家獲勝時
   } else if (guess === secretNumber) {
     document.querySelector('.message').textContent = '🎉 Correct Number!';
+    document.querySelector('.number').textContent = secretNumber;
+    document.querySelector('body').style.backgroundColor = '#60b347';
+    document.querySelector('.number').style.width = '30rem';
+
+    // 當猜得太高時
   } else if (guess > secretNumber) {
     if (score > 1) {
       document.querySelector('.message').textContent = '📈 Too high!';
@@ -49,6 +65,8 @@ document.querySelector('.check').addEventListener('click', () => {
       document.querySelector('.message').textContent = '💥 You lost the game!';
       document.querySelector('.score').textContent = 0;
     }
+
+    // 當猜得太低時
   } else if (guess < secretNumber) {
     if (score > 1) {
       document.querySelector('.message').textContent = '📉 Too low!';
@@ -59,4 +77,15 @@ document.querySelector('.check').addEventListener('click', () => {
       document.querySelector('.score').textContent = 0;
     }
   }
+});
+
+document.querySelector('.again').addEventListener('click', () => {
+  score = 20;
+  secretNumber = Math.trunc(Math.random() * 20) + 1;
+  document.querySelector('.score').textContent = score;
+  document.querySelector('.message').textContent = 'Start guessing...';
+  document.querySelector('.guess').value = '';
+  document.querySelector('.number').textContent = '?';
+  document.querySelector('.number').style.width = '15rem';
+  document.querySelector('body').style.backgroundColor = '#222';
 });
